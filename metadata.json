@@ -1,0 +1,5 @@
+{
+  "name": "KanbanFlow",
+  "description": "A personal Kanban board application for tracking work and ideas with drag-and-drop functionality, filtering, and dark mode.",
+  "requestFramePermissions": []
+}
