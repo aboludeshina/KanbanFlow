@@ -4,6 +4,7 @@ import { INITIAL_DATA, BoardData, AppSettings, DEFAULT_SETTINGS } from './types'
 import Board from './components/Board';
 import SettingsModal from './components/SettingsModal';
 import ImportExportModal from './components/ImportExportModal';
+import PrivacyModal from './components/PrivacyModal';
 import { FaMoon, FaSun, FaGithub, FaCog, FaFileImport } from 'react-icons/fa';
 
 const App: React.FC = () => {
@@ -11,6 +12,24 @@ const App: React.FC = () => {
   const [settings, setSettings] = useLocalStorage<AppSettings>('kanban-board-settings', DEFAULT_SETTINGS);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isImportExportOpen, setIsImportExportOpen] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Check if user has seen privacy notice
+    const hasSeenNotice = localStorage.getItem('hasSeenPrivacyNotice');
+    if (!hasSeenNotice) {
+      // Small delay to ensure smooth entrance animation after app load
+      const timer = setTimeout(() => {
+        setIsPrivacyModalOpen(true);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handlePrivacyModalClose = () => {
+    localStorage.setItem('hasSeenPrivacyNotice', 'true');
+    setIsPrivacyModalOpen(false);
+  };
 
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -125,6 +144,11 @@ const App: React.FC = () => {
         onClose={() => setIsImportExportOpen(false)}
         boardData={data}
         setBoardData={setData}
+      />
+
+      <PrivacyModal
+        isOpen={isPrivacyModalOpen}
+        onClose={handlePrivacyModalClose}
       />
 
       {/* Physical Dark Mode Toggle */}
